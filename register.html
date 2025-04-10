@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russcord - Регистрация</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="favicon.svg">
+    <style>
+
+.navigation {
+            display: flex;
+            justify-content: space-between;
+            padding: 1.5rem 3rem;
+            position: relative;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-left, .nav-right {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        /* Стили для навигационных элементов */
+        .nav-item {
+            position: relative;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 1rem;
+            text-transform: capitalize; /* Первая буква заглавная */
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        /* Эффекты при наведении на обычные элементы */
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-item:hover .nav-link {
+            color: white;
+        }
+        /* Структура формы */
+        .register-form {
+            display: flex;
+            flex-direction: column;
+            gap: 30px; /* Большие промежутки между элементами */
+        }
+        
+        /* Создаем фиксированный контейнер для поля ввода и иконки */
+        .input-container {
+            position: relative;
+            width: 100%;
+            height: 50px; /* Фиксированная высота */
+        }
+        
+        /* Иконка внутри контейнера */
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        /* Поле ввода внутри контейнера */
+        .form-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 0 15px 0 40px; /* Отступ слева для иконки */
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            line-height: 50px; /* Центрирование текста по вертикали */
+            transition: all 0.3s ease;
+        }
+        
+        /* Сообщения под контейнером */
+        .message-container {
+            width: 100%;
+            min-height: 20px; /* Минимальная высота для сообщений */
+        }
+        
+        .error-message, .format-hint {
+            display: none;
+            width: 100%;
+            font-size: 0.85rem;
+            padding-left: 10px;
+            margin-top: 5px;
+        }
+        
+        .error-message {
+            color: #ff3860;
+        }
+        
+        .format-hint {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.75rem;
+            display: block; /* По умолчанию показываем подсказку */
+        }
+        
+        /* Состояния ошибки */
+        .input-group.error .form-input {
+            border-color: #ff3860;
+        }
+        
+        .input-group.error .error-message {
+            display: block;
+        }
+        
+        .input-group.error .format-hint {
+            display: none;
+        }
+        
+        /* Кнопка регистрации */
+        .register-button {
+            margin-top: 10px;
+            padding: 15px;
+            border-radius: 25px;
+            background: var(--accent-color, #808080);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        .register-button:hover {
+            background: var(--secondary-color, #000);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Навигация -->
+        <nav class="navigation">
+            <div class="nav-left">
+                <a href="index.html" class="nav-link">Главная</a>
+                <a href="#" class="nav-link">о нас</a>
+            </div>
+            <div class="nav-right">
+                <a href="#" class="nav-link">поддержка</a>
+                <a href="#" class="nav-link">язык</a>
+            </div>
+        </nav>
+
+        <!-- Форма регистрации -->
+        <div class="register-box">
+            <h1>РЕГИСТРАЦИЯ</h1>
+            <form class="register-form" id="registerForm" onsubmit="handleRegistration(event)">
+                <!-- Группа ввода Email/Phone -->
+                <div class="input-group" id="emailPhoneGroup">
+                    <div class="input-container">
+                        <i class="input-icon fas fa-envelope"></i>
+                        <input type="text" id="emailPhone" class="form-input" placeholder="Почта / Телефон" required>
+                    </div>
+                    <div class="message-container">
+                        <div class="error-message">Допустимы только английские буквы, цифры, символы +, @, .</div>
+                        <div class="format-hint">Формат: email@example.com или +79123456789</div>
+                    </div>
+                </div>
+                
+                <!-- Группа ввода Имени -->
+                <div class="input-group">
+                    <div class="input-container">
+                        <i class="input-icon fas fa-user"></i>
+                        <input type="text" class="form-input" placeholder="Имя" required>
+                    </div>
+                    <div class="message-container">
+                        <div class="error-message">Введите имя</div>
+                    </div>
+                </div>
+                
+                <!-- Группа ввода Пароля -->
+                <div class="input-group" id="passwordGroup">
+                    <div class="input-container">
+                        <i class="input-icon fas fa-lock"></i>
+                        <input type="password" id="password" class="form-input" placeholder="Придумайте пароль" minlength="6" required>
+                    </div>
+                    <div class="message-container">
+                        <div class="error-message">Пароль должен содержать не менее 6 символов</div>
+                    </div>
+                </div>
+                
+                <!-- Группа подтверждения Пароля -->
+                <div class="input-group" id="confirmPasswordGroup">
+                    <div class="input-container">
+                        <i class="input-icon fas fa-check-circle"></i>
+                        <input type="password" id="confirmPassword" class="form-input" placeholder="Повторите пароль" required>
+                    </div>
+                    <div class="message-container">
+                        <div class="error-message">Пароли не совпадают</div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="register-button">Зарегистрироваться</button>
+                <div class="login-link">
+                    <a href="login.html" class="create-link">У меня есть аккаунт</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Декоративные элементы -->
+        <div class="decoration-wave"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Получаем элементы формы
+            const registerForm = document.getElementById('registerForm');
+            const emailPhoneInput = document.getElementById('emailPhone');
+            const emailPhoneGroup = document.getElementById('emailPhoneGroup');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const passwordGroup = document.getElementById('passwordGroup');
+            const confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
+            
+            // Регулярное выражение для проверки почты/телефона
+            const emailPhoneRegex = /^[a-zA-Z0-9+@.]+$/;
+            
+            // Проверка почты/телефона при вводе
+            emailPhoneInput.addEventListener('input', function() {
+                validateEmailPhone();
+            });
+            
+            // Проверка почты/телефона при потере фокуса
+            emailPhoneInput.addEventListener('blur', function() {
+                validateEmailPhone();
+            });
+            
+            // Проверка пароля при вводе
+            passwordInput.addEventListener('input', function() {
+                validatePassword();
+            });
+            
+            // Проверка подтверждения пароля при вводе
+            confirmPasswordInput.addEventListener('input', function() {
+                validateConfirmPassword();
+            });
+            
+            // Проверка пароля при потере фокуса
+            passwordInput.addEventListener('blur', function() {
+                validatePassword();
+            });
+            
+            // Проверка подтверждения пароля при потере фокуса
+            confirmPasswordInput.addEventListener('blur', function() {
+                validateConfirmPassword();
+            });
+            
+            // Функция валидации почты/телефона
+            function validateEmailPhone() {
+                const value = emailPhoneInput.value;
+                
+                if (!value || !emailPhoneRegex.test(value)) {
+                    emailPhoneGroup.classList.add('error');
+                    return false;
+                } else {
+                    emailPhoneGroup.classList.remove('error');
+                    return true;
+                }
+            }
+            
+            // Функция валидации пароля
+            function validatePassword() {
+                if (passwordInput.value.length < 6) {
+                    passwordGroup.classList.add('error');
+                    return false;
+                } else {
+                    passwordGroup.classList.remove('error');
+                    // Если пароль изменился, проверяем совпадение
+                    if (confirmPasswordInput.value) {
+                        validateConfirmPassword();
+                    }
+                    return true;
+                }
+            }
+            
+            // Функция валидации подтверждения пароля
+            function validateConfirmPassword() {
+                if (confirmPasswordInput.value !== passwordInput.value) {
+                    confirmPasswordGroup.classList.add('error');
+                    return false;
+                } else {
+                    confirmPasswordGroup.classList.remove('error');
+                    return true;
+                }
+            }
+            
+            // Обработка отправки формы
+            function handleRegistration(event) {
+                event.preventDefault();
+                
+                // Проверяем все поля при отправке
+                const isEmailPhoneValid = validateEmailPhone();
+                const isPasswordValid = validatePassword();
+                const isConfirmPasswordValid = validateConfirmPassword();
+                
+                if (!isEmailPhoneValid || !isPasswordValid || !isConfirmPasswordValid) {
+                    return false;
+                }
+                
+                const button = registerForm.querySelector('button');
+                button.textContent = 'Регистрация...';
+                button.disabled = true;
+                
+                // Имитируем процесс регистрации
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1000);
+            }
+            
+            // Привязываем функцию к событию отправки формы
+            registerForm.onsubmit = handleRegistration;
+        });
+    </script>
+</body>
+</html> 

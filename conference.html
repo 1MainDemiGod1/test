@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russcord - Конференция</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="favicon.svg">
+    <style>
+        /* Обновленные стили для навигации (из предыдущих изменений) */
+        /* ... */
+        
+        /* Стили для конференции */
+        .conference-container {
+            min-height: 100vh;
+            width: 100%;
+            background: var(--secondary-color);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        /* Сетка участников */
+        .conference-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            margin-bottom: 80px; /* Место для панели управления */
+        }
+        
+        /* Главный участник (большой) */
+        .main-participant {
+            width: 100%;
+            height: 60vh;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .main-participant .participant-card {
+            width: 70%;
+            max-width: 800px;
+            height: 100%;
+            background: rgba(40, 35, 65, 0.8);
+            border-radius: 15px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Другие участники (маленькие) */
+        .other-participants {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding: 10px 0;
+            width: 100%;
+        }
+        
+        .other-participants .participant-card {
+            min-width: 200px;
+            height: 150px;
+            background: rgba(40, 35, 65, 0.8);
+            border-radius: 15px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        /* Стили для аватара */
+        .participant-avatar {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            margin-bottom: 10px;
+        }
+        
+        .main-participant .participant-avatar {
+            width: 120px;
+            height: 120px;
+        }
+        
+        .avatar-circle {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--accent-color);
+            border: 3px solid var(--border-color);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .participant-initials {
+            color: var(--primary-color);
+            font-size: 2rem;
+            font-weight: bold;
+            z-index: 1;
+        }
+        
+        .main-participant .participant-initials {
+            font-size: 2.5rem;
+        }
+        
+        .participant-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 2;
+        }
+        
+        .participant-name {
+            color: var(--primary-color);
+            font-size: 1rem;
+            text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .main-participant .participant-name {
+            font-size: 1.5rem;
+        }
+        
+        /* Статус участника */
+        .participant-status {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+        }
+        
+        .status-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .status-icon.muted {
+            color: #ff3860;
+        }
+        
+        /* Индикаторы активного пользователя */
+        .user-card {
+            border: 2px solid var(--accent-color);
+            box-shadow: 0 0 10px rgba(var(--accent-color-rgb, 128, 128, 128), 0.5);
+        }
+        
+        /* Пустая карточка для будущих участников */
+        .empty-participant {
+            background: rgba(40, 35, 65, 0.4);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .empty-participant i {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 2rem;
+        }
+        
+        /* Нижняя панель управления */
+        .conference-controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: rgba(40, 35, 65, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .controls-left,
+        .controls-center,
+        .controls-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        /* Кнопки управления */
+        .control-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--primary-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .control-btn.active {
+            background: var(--accent-color);
+        }
+        
+        .control-btn.muted {
+            background: rgba(255, 0, 0, 0.3);
+        }
+        
+        /* Кнопки с текстом */
+        .controls-center .control-btn {
+            width: auto;
+            border-radius: 25px;
+            padding: 0 20px;
+            gap: 10px;
+        }
+        
+        .controls-center .control-btn span {
+            display: inline-block;
+            margin-left: 5px;
+        }
+        
+        /* Кнопка завершения звонка */
+        .end-call-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: none;
+            background: #ff3b30;
+            color: var(--primary-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .end-call-btn:hover {
+            background: #d63026;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="conference-container">
+        <!-- Обновленная навигация (из предыдущих изменений) -->
+        <!-- ... -->
+
+        <!-- Основной контент конференции -->
+        <div class="conference-content">
+            <!-- Главный участник (теперь это преподаватель) -->
+            <div class="main-participant">
+                <div class="participant-card">
+                    <div class="participant-avatar">
+                        <div class="avatar-circle">
+                            <span class="participant-initials">ПС</span>
+                        </div>
+                    </div>
+                    <div class="participant-name">Преподаватель Сидоров</div>
+                    <div class="participant-status">
+                        <div class="status-icon">
+                            <i class="fas fa-microphone"></i>
+                        </div>
+                        <div class="status-icon">
+                            <i class="fas fa-video"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Другие участники (включая вас) -->
+            <div class="other-participants">
+                <!-- Ваша карточка (текущий пользователь) -->
+                <div class="participant-card user-card" id="currentUserCard">
+                    <div class="participant-avatar">
+                        <div class="avatar-circle">
+                            <span class="participant-initials">ИФ</span>
+                            <img class="participant-img" src="" alt="Аватар" style="display: none;">
+                        </div>
+                    </div>
+                    <div class="participant-name">Участник</div>
+                    <div class="participant-status">
+                        <div class="status-icon" id="userAudioStatus">
+                            <i class="fas fa-microphone"></i>
+                        </div>
+                        <div class="status-icon" id="userVideoStatus">
+                            <i class="fas fa-video"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Другие участники -->
+                <div class="participant-card">
+                    <div class="participant-avatar">
+                        <div class="avatar-circle">
+                            <span class="participant-initials">АИ</span>
+                        </div>
+                    </div>
+                    <div class="participant-name">Анна Иванова</div>
+                    <div class="participant-status">
+                        <div class="status-icon">
+                            <i class="fas fa-microphone"></i>
+                        </div>
+                        <div class="status-icon">
+                            <i class="fas fa-video"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="participant-card">
+                    <div class="participant-avatar">
+                        <div class="avatar-circle">
+                            <span class="participant-initials">МК</span>
+                        </div>
+                    </div>
+                    <div class="participant-name">Мария Козлова</div>
+                    <div class="participant-status">
+                        <div class="status-icon muted">
+                            <i class="fas fa-microphone-slash"></i>
+                        </div>
+                        <div class="status-icon">
+                            <i class="fas fa-video"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="participant-card">
+                    <div class="participant-avatar">
+                        <div class="avatar-circle">
+                            <span class="participant-initials">ИП</span>
+                        </div>
+                    </div>
+                    <div class="participant-name">Иван Петров</div>
+                    <div class="participant-status">
+                        <div class="status-icon">
+                            <i class="fas fa-microphone"></i>
+                        </div>
+                        <div class="status-icon muted">
+                            <i class="fas fa-video-slash"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Пустые слоты для будущих участников -->
+                <div class="participant-card empty-participant">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                
+                <div class="participant-card empty-participant">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Нижняя панель управления -->
+        <div class="conference-controls">
+            <!-- Левая группа -->
+            <div class="controls-left">
+                <button class="control-btn settings-btn" title="Настройки">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <button class="control-btn mic-btn" id="micBtn" title="Микрофон">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <button class="control-btn cam-btn" id="camBtn" title="Камера">
+                    <i class="fas fa-video"></i>
+                </button>
+            </div>
+
+            <!-- Центральная группа -->
+            <div class="controls-center">
+                <button class="control-btn share-screen-btn" title="Демонстрация экрана">
+                    <i class="fas fa-desktop"></i>
+                    <span>Демонстрация</span>
+                </button>
+                <button class="control-btn participants-btn" title="Участники">
+                    <i class="fas fa-users"></i>
+                    <span>Участники</span>
+                </button>
+            </div>
+
+            <!-- Правая группа -->
+            <div class="controls-right">
+                <button class="control-btn raise-hand-btn" title="Поднять руку">
+                    <i class="fas fa-hand"></i>
+                </button>
+                <button class="control-btn more-btn" title="Дополнительно">
+                    <i class="fas fa-ellipsis-h"></i>
+                </button>
+                <button class="end-call-btn" title="Завершить звонок" onclick="window.location.href='profile.html'">
+                    <i class="fas fa-phone-slash"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                // Загружаем данные пользователя
+                const userName = localStorage.getItem('userName') || sessionStorage.getItem('userName');
+                const avatar = localStorage.getItem('avatar');
+                
+                // Загружаем состояние аудио и видео
+                const isAudioMuted = localStorage.getItem('audioMuted') === 'true';
+                const isVideoMuted = localStorage.getItem('videoMuted') === 'true';
+                
+                console.log('Загружены настройки:', { 
+                    name: userName, 
+                    hasAvatar: Boolean(avatar),
+                    audioMuted: isAudioMuted,
+                    videoMuted: isVideoMuted
+                });
+                
+                // Находим элементы пользовательской карточки
+                const userCard = document.getElementById('currentUserCard');
+                const nameElement = userCard.querySelector('.participant-name');
+                const initialsElement = userCard.querySelector('.participant-initials');
+                const avatarImg = userCard.querySelector('.participant-img');
+                const audioStatus = document.getElementById('userAudioStatus');
+                const videoStatus = document.getElementById('userVideoStatus');
+                
+                // Находим кнопки управления
+                const micBtn = document.getElementById('micBtn');
+                const camBtn = document.getElementById('camBtn');
+                
+                // Устанавливаем данные пользователя
+                if (userName && userName.trim() !== '') {
+                    nameElement.textContent = userName;
+                    
+                    // Обновляем инициалы
+                    const parts = userName.trim().split(' ');
+                    if (parts.length >= 2) {
+                        initialsElement.textContent = (parts[0][0] + parts[1][0]).toUpperCase();
+                    } else if (parts.length === 1 && parts[0]) {
+                        initialsElement.textContent = parts[0][0].toUpperCase();
+                    }
+                }
+                
+                // Устанавливаем аватар
+                if (avatar) {
+                    avatarImg.src = avatar;
+                    avatarImg.style.display = 'block';
+                    initialsElement.style.display = 'none';
+                }
+                
+                // Устанавливаем состояние для кнопок и индикаторов
+                if (isAudioMuted) {
+                    // Обновляем кнопку микрофона
+                    micBtn.classList.add('muted');
+                    const micIcon = micBtn.querySelector('i');
+                    micIcon.classList.replace('fa-microphone', 'fa-microphone-slash');
+                    
+                    // Обновляем индикатор в карточке
+                    audioStatus.classList.add('muted');
+                    const statusIcon = audioStatus.querySelector('i');
+                    statusIcon.classList.replace('fa-microphone', 'fa-microphone-slash');
+                }
+                
+                if (isVideoMuted) {
+                    // Обновляем кнопку камеры
+                    camBtn.classList.add('muted');
+                    const camIcon = camBtn.querySelector('i');
+                    camIcon.classList.replace('fa-video', 'fa-video-slash');
+                    
+                    // Обновляем индикатор в карточке
+                    videoStatus.classList.add('muted');
+                    const statusIcon = videoStatus.querySelector('i');
+                    statusIcon.classList.replace('fa-video', 'fa-video-slash');
+                }
+                
+                // Обработчик для кнопки микрофона
+                micBtn.addEventListener('click', function() {
+                    this.classList.toggle('muted');
+                    const isMuted = this.classList.contains('muted');
+                    const icon = this.querySelector('i');
+                    
+                    if (isMuted) {
+                        icon.classList.replace('fa-microphone', 'fa-microphone-slash');
+                    } else {
+                        icon.classList.replace('fa-microphone-slash', 'fa-microphone');
+                    }
+                    
+                    // Обновляем индикатор в карточке
+                    audioStatus.classList.toggle('muted', isMuted);
+                    const statusIcon = audioStatus.querySelector('i');
+                    if (isMuted) {
+                        statusIcon.classList.replace('fa-microphone', 'fa-microphone-slash');
+                    } else {
+                        statusIcon.classList.replace('fa-microphone-slash', 'fa-microphone');
+                    }
+                    
+                    // Сохраняем состояние
+                    localStorage.setItem('audioMuted', isMuted);
+                });
+                
+                // Обработчик для кнопки камеры
+                camBtn.addEventListener('click', function() {
+                    this.classList.toggle('muted');
+                    const isMuted = this.classList.contains('muted');
+                    const icon = this.querySelector('i');
+                    
+                    if (isMuted) {
+                        icon.classList.replace('fa-video', 'fa-video-slash');
+                    } else {
+                        icon.classList.replace('fa-video-slash', 'fa-video');
+                    }
+                    
+                    // Обновляем индикатор в карточке
+                    videoStatus.classList.toggle('muted', isMuted);
+                    const statusIcon = videoStatus.querySelector('i');
+                    if (isMuted) {
+                        statusIcon.classList.replace('fa-video', 'fa-video-slash');
+                    } else {
+                        statusIcon.classList.replace('fa-video-slash', 'fa-video');
+                    }
+                    
+                    // Сохраняем состояние
+                    localStorage.setItem('videoMuted', isMuted);
+                });
+                
+                // Обработчик для кнопки "Поднять руку"
+                const raiseHandBtn = document.querySelector('.raise-hand-btn');
+                if (raiseHandBtn) {
+                    raiseHandBtn.addEventListener('click', function() {
+                        this.classList.toggle('active');
+                        const isActive = this.classList.contains('active');
+                        
+                        if (isActive) {
+                            alert('Вы подняли руку');
+                        } else {
+                            alert('Вы опустили руку');
+                        }
+                    });
+                }
+                
+                // Обработчик для кнопки демонстрации экрана
+                const shareScreenBtn = document.querySelector('.share-screen-btn');
+                if (shareScreenBtn) {
+                    shareScreenBtn.addEventListener('click', function() {
+                        this.classList.toggle('active');
+                        const isActive = this.classList.contains('active');
+                        
+                        if (isActive) {
+                            alert('Демонстрация экрана включена');
+                        } else {
+                            alert('Демонстрация экрана выключена');
+                        }
+                    });
+                }
+                
+                // Обработчик для кнопки участников
+                const participantsBtn = document.querySelector('.participants-btn');
+                if (participantsBtn) {
+                    participantsBtn.addEventListener('click', function() {
+                        alert('Участники конференции: 5\n\nПреподаватель Сидоров\nВы\nАнна Иванова\nМария Козлова\nИван Петров');
+                    });
+                }
+            } catch (e) {
+                console.error('Ошибка при инициализации страницы:', e);
+            }
+        });
+    </script>
+</body>
+</html> 

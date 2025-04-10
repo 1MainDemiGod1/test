@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russcord - Главная</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="favicon.svg">
+    <style>
+        /* Обновленные стили для навигации */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            padding: 1.5rem 3rem;
+            position: relative;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-left, .nav-right {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        /* Стили для навигационных элементов */
+        .nav-item {
+            position: relative;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 1rem;
+            text-transform: capitalize; /* Первая буква заглавная */
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        /* Эффекты при наведении на обычные элементы */
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-item:hover .nav-link {
+            color: white;
+        }
+        
+        /* Стили для элемента с выпадающим меню */
+        .dropdown {
+            position: relative;
+        }
+        
+        .dropdown-toggle::after {
+            content: "";
+            display: inline-block;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+            border-top: 5px solid white;
+            border-right: 5px solid transparent;
+            border-left: 5px solid transparent;
+            transition: transform 0.3s ease;
+        }
+        
+        .dropdown.active .dropdown-toggle::after {
+            transform: rotate(180deg);
+        }
+        
+        /* Выпадающее меню */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 180px;
+            margin-top: 0.5rem;
+            background: rgba(30, 25, 50, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .dropdown.active .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown-item {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+            border-left: 3px solid transparent;
+        }
+        
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            border-left-color: var(--accent-color, #808080);
+        }
+        
+        .dropdown-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left-color: var(--accent-color, #808080);
+            font-weight: 500;
+        }
+        
+        /* Разделитель в меню */
+        .dropdown-divider {
+            height: 1px;
+            margin: 0.5rem 0;
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Обновленная навигация -->
+        <nav class="navigation">
+            <div class="nav-left">
+                <div class="nav-item">
+                    <a href="index.html" class="nav-link">Главная</a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link">О нас</a>
+                </div>
+            </div>
+            <div class="nav-right">
+                <div class="nav-item">
+                    <a href="#" class="nav-link">Поддержка</a>
+                </div>
+                <div class="nav-item dropdown" id="languageDropdown">
+                    <a href="#" class="nav-link dropdown-toggle">Язык</a>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item active" data-lang="ru">Русский</a>
+                        <a href="#" class="dropdown-item" data-lang="en">English</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item" data-lang="kz">Қазақша</a>
+                        <a href="#" class="dropdown-item" data-lang="uz">O'zbek</a>
+                        <a href="#" class="dropdown-item" data-lang="by">Беларуская</a>
+                        <a href="#" class="dropdown-item" data-lang="pl">Polski</a>
+                        <a href="#" class="dropdown-item" data-lang="ua">Українська</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Основной контент -->
+        <div class="main-content">
+            <div class="title-container">
+                <h1 class="main-title">
+                    <span class="title-part">RUSS</span>
+                    <span class="title-part">CORD</span>
+                </h1>
+            </div>
+
+            <!-- Кнопка входа -->
+            <div class="enter-button-container">
+                <a href="login.html" class="enter-button">
+                    <span class="button-text">Вход</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Декоративные элементы -->
+        <div class="decoration-wave"></div>
+        <div class="decoration-corner"></div>
+    </div>
+
+    <script>
+        // Добавляем обработчик для выпадающего меню
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdown = document.getElementById('languageDropdown');
+            const dropdownToggle = dropdown.querySelector('.dropdown-toggle');
+            const dropdownItems = dropdown.querySelectorAll('.dropdown-item');
+            
+            // Открытие/закрытие выпадающего меню
+            dropdownToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                dropdown.classList.toggle('active');
+            });
+            
+            // Закрытие меню при клике вне его
+            document.addEventListener('click', function(e) {
+                if (!dropdown.contains(e.target)) {
+                    dropdown.classList.remove('active');
+                }
+            });
+            
+            // Выбор языка
+            dropdownItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Убираем активный класс у всех элементов
+                    dropdownItems.forEach(el => el.classList.remove('active'));
+                    
+                    // Добавляем активный класс к выбранному элементу
+                    this.classList.add('active');
+                    
+                    // Закрываем меню
+                    dropdown.classList.remove('active');
+                    
+                    // Получаем выбранный язык
+                    const lang = this.getAttribute('data-lang');
+                    
+                    // Здесь можно добавить логику смены языка
+                    console.log('Выбран язык:', lang);
+                    
+                    // Обновляем текст кнопки
+                    dropdownToggle.textContent = this.textContent;
+                });
+            });
+        });
+    </script>
+</body>
+</html> 
