@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testname - Главная</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="favicon.svg">
+    <style>
+        :root {
+            --accent-color: #8B5CF6;
+            --text-color: #FFFFFF;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background: #1A1A1A;
+            color: var(--text-color);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .main-container {
+            position: relative;
+            min-height: 100vh;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Navigation styles */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 4rem;
+            position: relative;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #FFFFFF;
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo:hover {
+            opacity: 0.8;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3.5rem;
+            align-items: center;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .nav-link {
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 1.3rem;
+            transition: opacity 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            opacity: 0.8;
+        }
+
+        /* Language selector styles */
+        .language-selector {
+            display: flex;
+            align-items: center;
+            position: relative;
+            width: 180px;
+            margin-left: 20px;
+        }
+
+        .language-button {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0.7rem;
+            color: #FFFFFF;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.3rem;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+        }
+
+        .language-button span {
+            display: inline-block;
+            width: 100px;
+            text-align: right;
+            margin-right: 10px;
+        }
+
+        .language-button img {
+            width: 28px;
+            height: 28px;
+            transition: transform 0.3s ease;
+        }
+
+        .language-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            display: none;
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 180px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .language-option {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            color: #FFFFFF;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .language-option img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+
+        .language-option span {
+            flex: 1;
+        }
+
+        .language-button:hover,
+        .language-option:hover {
+            opacity: 0.8;
+        }
+
+        .language-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .language-button:hover img {
+            transform: rotate(15deg);
+        }
+
+        .language-dropdown.active {
+            display: flex;
+        }
+
+        /* Main content styles */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            min-height: calc(100vh - 80px);
+            padding: 0 15% 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .title-container {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .main-title {
+            font-size: 5.5rem;
+            font-weight: 800;
+            margin: 0;
+            color: white;
+            text-shadow: 0 0 50px rgba(139, 92, 246, 0.5);
+            position: relative;
+            letter-spacing: -2px;
+        }
+
+        .main-title::before {
+            content: 'TestName';
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0.8;
+            animation: glowPulse 2s infinite;
+        }
+
+        @keyframes glowPulse {
+            0% {
+                filter: blur(0px);
+                transform: scale(1);
+            }
+            50% {
+                filter: blur(3px);
+                transform: scale(1.01);
+            }
+            100% {
+                filter: blur(0px);
+                transform: scale(1);
+            }
+        }
+
+        .enter-button {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem 4rem;
+            font-size: 1.4rem;
+            color: #FFFFFF;
+            text-decoration: none;
+            background: linear-gradient(135deg, 
+                #9B6B9E 0%, 
+                #663399 45%, 
+                #4B0082 100%
+            );
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            -webkit-clip-path: polygon(
+                50% 0%,
+                80% 10%,
+                100% 35%,
+                100% 65%,
+                80% 90%,
+                50% 100%,
+                20% 90%,
+                0% 65%,
+                0% 35%,
+                20% 10%
+            );
+            clip-path: polygon(
+                50% 0%,
+                80% 10%,
+                100% 35%,
+                100% 65%,
+                80% 90%,
+                50% 100%,
+                20% 90%,
+                0% 65%,
+                0% 35%,
+                20% 10%
+            );
+            min-width: 200px;
+            transform: scale(1.1);
+            box-shadow: 
+                0 10px 20px rgba(102, 51, 153, 0.4),
+                0 6px 6px rgba(155, 107, 158, 0.3),
+                inset 0 -5px 10px rgba(0, 0, 0, 0.3),
+                inset 0 5px 10px rgba(255, 255, 255, 0.25);
+            background-image: 
+                linear-gradient(135deg, 
+                    rgba(255, 255, 255, 0.1) 0%,
+                    rgba(255, 255, 255, 0.05) 25%,
+                    rgba(102, 51, 153, 0.5) 50%,
+                    rgba(75, 0, 130, 0.8) 75%,
+                    rgba(102, 51, 153, 0.5) 100%
+                );
+        }
+
+        .enter-button::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.4) 0%,
+                rgba(155, 107, 158, 0.2) 50%,
+                rgba(102, 51, 153, 0.4) 100%
+            );
+            filter: blur(5px);
+            opacity: 0.7;
+            z-index: -1;
+            -webkit-clip-path: polygon(
+                50% 0%,
+                80% 10%,
+                100% 35%,
+                100% 65%,
+                80% 90%,
+                50% 100%,
+                20% 90%,
+                0% 65%,
+                0% 35%,
+                20% 10%
+            );
+            clip-path: polygon(
+                50% 0%,
+                80% 10%,
+                100% 35%,
+                100% 65%,
+                80% 90%,
+                50% 100%,
+                20% 90%,
+                0% 65%,
+                0% 35%,
+                20% 10%
+            );
+        }
+
+        .enter-button::after {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            background: linear-gradient(135deg,
+                rgba(255, 255, 255, 0.2) 0%,
+                rgba(155, 107, 158, 0.1) 25%,
+                rgba(102, 51, 153, 0.2) 50%,
+                rgba(75, 0, 130, 0.3) 75%,
+                rgba(102, 51, 153, 0.2) 100%
+            );
+            -webkit-clip-path: polygon(
+                50% 0%,
+                80% 10%,
+                100% 35%,
+                100% 65%,
+                80% 90%,
+                50% 100%,
+                20% 90%,
+                0% 65%,
+                0% 35%,
+                20% 10%
+            );
+            clip-path: polygon(
+                50% 0%,
+                80% 10%,
+                100% 35%,
+                100% 65%,
+                80% 90%,
+                50% 100%,
+                20% 90%,
+                0% 65%,
+                0% 35%,
+                20% 10%
+            );
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .enter-button:hover {
+            transform: scale(1.15);
+            box-shadow: 
+                0 15px 30px rgba(102, 51, 153, 0.5),
+                0 10px 10px rgba(155, 107, 158, 0.4),
+                inset 0 -5px 12px rgba(0, 0, 0, 0.35),
+                inset 0 5px 12px rgba(255, 255, 255, 0.3);
+            background-image: 
+                linear-gradient(135deg, 
+                    rgba(255, 255, 255, 0.2) 0%,
+                    rgba(255, 255, 255, 0.1) 25%,
+                    rgba(102, 51, 153, 0.6) 50%,
+                    rgba(75, 0, 130, 0.9) 75%,
+                    rgba(102, 51, 153, 0.6) 100%
+                );
+        }
+
+        .enter-button:hover::before {
+            opacity: 0.9;
+            filter: blur(7px);
+        }
+
+        .enter-button:hover::after {
+            opacity: 0.9;
+            background: linear-gradient(135deg,
+                rgba(255, 255, 255, 0.3) 0%,
+                rgba(155, 107, 158, 0.2) 25%,
+                rgba(102, 51, 153, 0.3) 50%,
+                rgba(75, 0, 130, 0.4) 75%,
+                rgba(102, 51, 153, 0.3) 100%
+            );
+        }
+
+        @keyframes subtle-float {
+            0%, 100% {
+                transform: translate(0, 0) scale(1.1);
+                box-shadow: 
+                    0 10px 20px rgba(102, 51, 153, 0.4),
+                    0 6px 6px rgba(155, 107, 158, 0.3),
+                    inset 0 -5px 10px rgba(0, 0, 0, 0.3),
+                    inset 0 5px 10px rgba(255, 255, 255, 0.25);
+            }
+            50% {
+                transform: translate(0, -5px) scale(1.1);
+                box-shadow: 
+                    0 15px 30px rgba(102, 51, 153, 0.5),
+                    0 10px 10px rgba(155, 107, 158, 0.4),
+                    inset 0 -5px 12px rgba(0, 0, 0, 0.35),
+                    inset 0 5px 12px rgba(255, 255, 255, 0.3);
+            }
+        }
+
+        .enter-button {
+            animation: subtle-float 4s ease-in-out infinite;
+        }
+
+        .background-container {
+            position: absolute;
+            background-image: url("img/main.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            filter: brightness(0.85);
+        }
+
+        /* Добавляем дополнительный слой для улучшения читаемости контента */
+        .background-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                135deg,
+                rgba(139, 92, 246, 0.05) 0%,
+                rgba(236, 72, 153, 0.05) 100%
+            );
+            backdrop-filter: blur(0.1);
+        }
+
+        /* Page Transition Styles */
+        .page-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+            z-index: 9999;
+            transform: translateX(100%);
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .page-transition::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, transparent 70%);
+        }
+
+        .page-transition.active {
+            animation: pageTransitionIn 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes pageTransitionIn {
+            0% {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(0%);
+                opacity: 1;
+            }
+        }
+
+        /* Ripple effect for interactive elements */
+        .nav-link, .enter-button, .logo {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ripple {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: rippleEffect 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        @keyframes rippleEffect {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-transition"></div>
+    <div class="main-container">
+        <!-- Navigation -->
+        <nav class="navigation">
+            <a href="index.html" class="logo">TESTNAME</a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Главная</a>
+                <a href="#" class="nav-link">О нас</a>
+                <a href="#" class="nav-link">Поддержка</a>
+            </div>
+            <div class="language-selector">
+                <button class="language-button">
+                    <span>Язык</span>
+                    <img src="img/earth.ico" alt="Language">
+                </button>
+                <div class="language-dropdown">
+                    <a href="#" class="language-option" data-lang="ru">
+                        <img src="img/ru.png" alt="Русский">
+                        <span>Русский</span>
+                    </a>
+                    <a href="#" class="language-option" data-lang="en">
+                        <img src="img/en.png" alt="English">
+                        <span>English</span>
+                    </a>
+                    <a href="#" class="language-option" data-lang="de">
+                        <img src="img/de.png" alt="Deutsch">
+                        <span>Deutsch</span>
+                    </a>
+                    <a href="#" class="language-option" data-lang="fr">
+                        <img src="img/fr.png" alt="Français">
+                        <span>Français</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <div class="main-content">
+            <div class="title-container">
+                <h1 class="main-title">TestName</h1>
+            </div>
+            <a href="login.html" class="enter-button"><span>Вход</span></a>
+        </div>
+
+        <!-- Background container for the main image -->
+        <div class="background-container">
+            <!-- The main background image will be added here via CSS -->
+        </div>
+    </div>
+
+    <script src="translations.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Language selector functionality
+            const languageButton = document.querySelector('.language-button');
+            const languageDropdown = document.querySelector('.language-dropdown');
+            const languageOptions = document.querySelectorAll('.language-option');
+
+            // Function to update page content based on selected language
+            function updatePageContent(lang) {
+                // Update navigation links
+                document.querySelector('.nav-links').children[0].textContent = translations[lang].nav.home;
+                document.querySelector('.nav-links').children[1].textContent = translations[lang].nav.about;
+                document.querySelector('.nav-links').children[2].textContent = translations[lang].nav.support;
+                
+                // Update language button text
+                languageButton.querySelector('span').textContent = translations[lang].nav.language;
+                
+                // Update enter button text
+                document.querySelector('.enter-button span').textContent = translations[lang].auth.login;
+            }
+
+            // Load saved language
+            const savedLang = localStorage.getItem('selectedLanguage') || 'ru';
+            const savedLangText = localStorage.getItem('selectedLanguageText');
+            const savedLangImg = localStorage.getItem('selectedLanguageImg');
+            
+            // Update content with saved language
+            updatePageContent(savedLang);
+            
+            if (savedLang && savedLangText && savedLangImg) {
+                languageButton.querySelector('span').textContent = translations[savedLang].nav.language;
+                languageButton.querySelector('img').src = savedLangImg;
+            }
+
+            // Open/close dropdown on button click
+            languageButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                languageDropdown.classList.toggle('active');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!languageDropdown.contains(e.target) && !languageButton.contains(e.target)) {
+                    languageDropdown.classList.remove('active');
+                }
+            });
+
+            // Handle language selection
+            languageOptions.forEach(option => {
+                option.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const lang = this.getAttribute('data-lang');
+                    const langText = this.textContent.trim();
+                    const langImg = this.querySelector('img').src;
+                    
+                    // Save selected language
+                    localStorage.setItem('selectedLanguage', lang);
+                    localStorage.setItem('selectedLanguageText', langText);
+                    localStorage.setItem('selectedLanguageImg', langImg);
+                    
+                    // Update page content
+                    updatePageContent(lang);
+                    
+                    // Update button icon
+                    languageButton.querySelector('img').src = langImg;
+                    
+                    // Close dropdown
+                    languageDropdown.classList.remove('active');
+                });
+            });
+
+            // Function to handle page transitions
+            function handlePageTransition(event, targetUrl) {
+                event.preventDefault();
+                
+                // Create ripple element
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                
+                // Set ripple position
+                const rect = event.currentTarget.getBoundingClientRect();
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                
+                // Add ripple to clicked element
+                event.currentTarget.appendChild(ripple);
+                
+                // Start page transition
+                document.querySelector('.page-transition').classList.add('active');
+                
+                // Remove ripple after animation
+                setTimeout(() => {
+                    ripple.remove();
+                }, 800);
+
+                // Navigate to target page after transition
+                setTimeout(() => {
+                    window.location.href = targetUrl;
+                }, 1000);
+            }
+
+            // Add transition effect to all navigation links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.getAttribute('href') !== '#') {
+                    link.addEventListener('click', (e) => {
+                        handlePageTransition(e, link.getAttribute('href'));
+                    });
+                }
+            });
+
+            // Add transition effect to logo
+            const logo = document.querySelector('.logo');
+            logo.addEventListener('click', (e) => {
+                if (window.location.pathname !== '/index.html') {
+                    handlePageTransition(e, 'index.html');
+                }
+            });
+
+            // Add transition effect to enter button
+            const enterButton = document.querySelector('.enter-button');
+            enterButton.addEventListener('click', (e) => {
+                handlePageTransition(e, 'login.html');
+            });
+        });
+    </script>
+</body>
+</html> 

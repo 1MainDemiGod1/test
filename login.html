@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testname - Вход</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="favicon.svg">
+    <style>
+        :root {
+            --accent-color: #8B5CF6;
+            --text-color: #FFFFFF;
+            --background-color: #1A1A1A;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Navigation styles */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 4rem;
+            position: relative;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #FFFFFF;
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo:hover {
+            opacity: 0.8;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3.5rem;
+            align-items: center;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .nav-link {
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 1.3rem;
+            transition: opacity 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            opacity: 0.8;
+        }
+
+        /* Language selector styles */
+        .language-selector {
+            display: flex;
+            align-items: center;
+            position: relative;
+            width: 180px;
+            margin-left: 20px;
+        }
+
+        .language-button {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0.7rem;
+            color: #FFFFFF;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.3rem;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+        }
+
+        .language-button span {
+            display: inline-block;
+            width: 100px;
+            text-align: right;
+            margin-right: 10px;
+        }
+
+        .language-button img {
+            width: 28px;
+            height: 28px;
+            transition: transform 0.3s ease;
+        }
+
+        .language-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            display: none;
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 180px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .language-option {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            color: #FFFFFF;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .language-option img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+
+        .language-option span {
+            flex: 1;
+        }
+
+        .language-button:hover,
+        .language-option:hover {
+            opacity: 0.8;
+        }
+
+        .language-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .language-button:hover img {
+            transform: rotate(15deg);
+        }
+
+        .language-dropdown.active {
+            display: flex;
+        }
+
+        /* Структура формы */
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        /* Создаем фиксированный контейнер для поля ввода и иконки */
+        .input-container {
+            position: relative;
+            width: 100%;
+            height: 50px; /* Фиксированная высота */
+        }
+        
+        /* Иконка внутри контейнера */
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        /* Поле ввода внутри контейнера */
+        .form-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 0 15px 0 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 1rem;
+            line-height: 50px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+        }
+        
+        /* Сообщения под контейнером */
+        .message-container {
+            width: 100%;
+            min-height: 20px; /* Минимальная высота для сообщений */
+        }
+        
+        .error-message {
+            display: none;
+            width: 100%;
+            font-size: 0.85rem;
+            padding-left: 10px;
+            margin-top: 5px;
+            color: #EC4899;
+        }
+        
+        /* Состояния ошибки */
+        .input-group.error .form-input {
+            border-color: #ff3860;
+        }
+        
+        .input-group.error .error-message {
+            display: block;
+        }
+        
+        /* Кнопка входа */
+        .login-button {
+            margin-top: 10px;
+            padding: 15px;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+            color: var(--text-color);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+        
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
+        }
+
+        .login-button:disabled {
+            background: rgba(139, 92, 246, 0.5);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Ссылка для создания аккаунта */
+        .create-link {
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .create-link:hover {
+            opacity: 0.8;
+        }
+
+        /* Заголовок формы */
+        h1 {
+            color: var(--text-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Navigation -->
+        <nav class="navigation">
+            <a href="index.html" class="logo">TESTNAME</a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Главная</a>
+                <a href="#" class="nav-link">О нас</a>
+                <a href="#" class="nav-link">Поддержка</a>
+            </div>
+            <div class="language-selector">
+                <button class="language-button">
+                    <span>Язык</span>
+                    <img src="img/earth.ico" alt="Language">
+                </button>
+                <div class="language-dropdown">
+                    <a href="#" class="language-option" data-lang="ru">
+                        <img src="img/ru.png" alt="Русский">
+                        <span>Русский</span>
+                    </a>
+                    <a href="#" class="language-option" data-lang="en">
+                        <img src="img/en.png" alt="English">
+                        <span>English</span>
+                    </a>
+                    <a href="#" class="language-option" data-lang="de">
+                        <img src="img/de.png" alt="Deutsch">
+                        <span>Deutsch</span>
+                    </a>
+                    <a href="#" class="language-option" data-lang="fr">
+                        <img src="img/fr.png" alt="Français">
+                        <span>Français</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Форма входа -->
+        <div class="login-box">
+            <h1>Вход</h1>
+            <form class="login-form" id="loginForm">
+                <!-- Группа ввода имени пользователя -->
+                <div class="input-group">
+                    <div class="input-container">
+                        <i class="input-icon fas fa-user"></i>
+                        <input type="text" id="username" class="form-input" placeholder="Имя пользователя" required>
+                    </div>
+                    <div class="message-container">
+                        <div class="error-message">Введите имя пользователя</div>
+                    </div>
+                </div>
+                
+                <!-- Группа ввода пароля -->
+                <div class="input-group" id="passwordGroup">
+                    <div class="input-container">
+                        <i class="input-icon fas fa-lock"></i>
+                        <input type="password" id="password" class="form-input" placeholder="Пароль" minlength="6" required>
+                    </div>
+                    <div class="message-container">
+                        <div class="error-message">Пароль должен содержать не менее 6 символов</div>
+                    </div>
+                </div>
+                
+                <button type="button" class="login-button" onclick="handleLogin()">Войти</button>
+                <div class="create-account">
+                    <a href="register.html" class="create-link">Создать аккаунт</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Декоративные элементы -->
+        <div class="decoration-wave"></div>
+    </div>
+
+    <script src="translations.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Language selector functionality
+            const languageButton = document.querySelector('.language-button');
+            const languageDropdown = document.querySelector('.language-dropdown');
+            const languageOptions = document.querySelectorAll('.language-option');
+
+            // Function to update page content based on selected language
+            function updatePageContent(lang) {
+                // Update navigation links
+                document.querySelector('.nav-links').children[0].textContent = translations[lang].nav.home;
+                document.querySelector('.nav-links').children[1].textContent = translations[lang].nav.about;
+                document.querySelector('.nav-links').children[2].textContent = translations[lang].nav.support;
+                
+                // Update language button text
+                languageButton.querySelector('span').textContent = translations[lang].nav.language;
+                
+                // Update form elements
+                document.querySelector('h1').textContent = translations[lang].auth.login;
+                document.querySelector('#username').placeholder = translations[lang].auth.username;
+                document.querySelector('#password').placeholder = translations[lang].auth.password;
+                document.querySelector('.login-button').textContent = translations[lang].auth.loginButton;
+                document.querySelector('.create-link').textContent = translations[lang].auth.createAccount;
+                
+                // Update error messages
+                document.querySelector('#username').parentElement.nextElementSibling.querySelector('.error-message').textContent = translations[lang].errors.enterUsername;
+                document.querySelector('#password').parentElement.nextElementSibling.querySelector('.error-message').textContent = translations[lang].errors.passwordLength;
+            }
+
+            // Load saved language
+            const savedLang = localStorage.getItem('selectedLanguage') || 'ru';
+            const savedLangText = localStorage.getItem('selectedLanguageText');
+            const savedLangImg = localStorage.getItem('selectedLanguageImg');
+            
+            // Update content with saved language
+            updatePageContent(savedLang);
+            
+            if (savedLang && savedLangText && savedLangImg) {
+                languageButton.querySelector('span').textContent = translations[savedLang].nav.language;
+                languageButton.querySelector('img').src = savedLangImg;
+            }
+
+            // Open/close dropdown on button click
+            languageButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                languageDropdown.classList.toggle('active');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!languageDropdown.contains(e.target) && !languageButton.contains(e.target)) {
+                    languageDropdown.classList.remove('active');
+                }
+            });
+
+            // Handle language selection
+            languageOptions.forEach(option => {
+                option.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const lang = this.getAttribute('data-lang');
+                    const langText = this.textContent.trim();
+                    const langImg = this.querySelector('img').src;
+                    
+                    // Save selected language
+                    localStorage.setItem('selectedLanguage', lang);
+                    localStorage.setItem('selectedLanguageText', langText);
+                    localStorage.setItem('selectedLanguageImg', langImg);
+                    
+                    // Update page content
+                    updatePageContent(lang);
+                    
+                    // Update button icon
+                    languageButton.querySelector('img').src = langImg;
+                    
+                    // Close dropdown
+                    languageDropdown.classList.remove('active');
+                });
+            });
+        });
+
+        // Новая функция для обработки входа
+        function handleLogin() {
+            const passwordInput = document.getElementById('password');
+            const passwordGroup = document.getElementById('passwordGroup');
+            const loginButton = document.querySelector('.login-button');
+
+            // Проверка пароля
+            if (passwordInput.value.length < 6) {
+                passwordGroup.classList.add('error');
+                return false;
+            }
+
+            // Деактивируем кнопку и меняем текст
+            loginButton.disabled = true;
+            loginButton.textContent = translations[window.currentLang || 'ru'].auth.loginButton + '...';
+
+            // Переход на страницу профиля
+            setTimeout(() => {
+                window.location.replace('profile.html');
+            }, 1000);
+        }
+    </script>
+</body>
+</html> 

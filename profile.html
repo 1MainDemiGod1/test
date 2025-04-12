@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testname - Профиль</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Добавляем иконки Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="favicon.svg">
+    <style>
+        :root {
+            --accent-color: #8B5CF6;
+            --text-color: #FFFFFF;
+            --background-color: #1A1A1A;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Navigation styles */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 4rem;
+            position: relative;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #FFFFFF;
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo:hover {
+            opacity: 0.8;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3.5rem;
+            align-items: center;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .nav-link {
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 1.3rem;
+            transition: opacity 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            opacity: 0.8;
+        }
+
+        /* Language selector styles */
+        .language-selector {
+            display: flex;
+            align-items: center;
+            position: relative;
+            width: 180px;
+            margin-left: 20px;
+        }
+
+        .language-button {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0.7rem;
+            color: #FFFFFF;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.3rem;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+        }
+
+        .language-button span {
+            display: inline-block;
+            width: 100px;
+            text-align: right;
+            margin-right: 10px;
+        }
+
+        .language-button img {
+            width: 28px;
+            height: 28px;
+            transition: transform 0.3s ease;
+        }
+
+        .language-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            display: none;
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 180px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .language-option {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            color: #FFFFFF;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .language-option img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+
+        .language-option span {
+            flex: 1;
+        }
+
+        .language-button:hover,
+        .language-option:hover {
+            opacity: 0.8;
+        }
+
+        .language-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .language-button:hover img {
+            transform: rotate(15deg);
+        }
+
+        .language-dropdown.active {
+            display: flex;
+        }
+
+        /* Обновленные стили для профиля */
+        .profile-box {
+            width: 90%;
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        /* Стили для аватара */
+        .profile-avatar {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            width: 180px;
+            height: 180px;
+        }
+
+        .avatar-circle {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(139, 92, 246, 0.1);
+            border: 3px solid rgba(139, 92, 246, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Стили для поля имени */
+        .profile-name {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .name-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 1rem 1.5rem;
+            font-size: 1.2rem;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        /* Обновленные стили для кнопок управления */
+        .control-panel {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .connect-btn {
+            min-width: 200px;
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+            color: var(--text-color);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        .connect-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
+        }
+
+        .connect-btn:disabled {
+            background: rgba(139, 92, 246, 0.5);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-btn:hover {
+            background: rgba(139, 92, 246, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Эффект пульсации */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(236, 72, 153, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(236, 72, 153, 0); }
+        }
+        
+        .control-btn.muted {
+            animation: pulse 1.5s infinite;
+        }
+        
+        /* Индикатор состояния */
+        .status-indicator {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #EC4899;
+            border: 2px solid var(--background-color);
+            display: none;
+        }
+        
+        .control-btn.muted .status-indicator {
+            display: block;
+        }
+
+        /* Стили для аватара */
+        .avatar-upload {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--text-color);
+        }
+
+        .avatar-upload:hover {
+            background: rgba(139, 92, 246, 0.3);
+        }
+
+        /* Стили для поля имени */
+        .name-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .name-input:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+        }
+
+        /* Инициалы */
+        .initials {
+            color: var(--text-color);
+            text-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <!-- Navigation -->
+        <nav class="navigation">
+            <a href="index.html" class="logo">TESTNAME</a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Главная</a>
+                <a href="#" class="nav-link">О нас</a>
+                <a href="#" class="nav-link">Поддержка</a>
+            </div>
+            <div class="language-selector">
+                <button class="language-button">
+                    <span>Язык</span>
+                    <img src="img/earth.ico" alt="Language">
+                </button>
+                <div class="language-dropdown">
+                    <a href="#" class="language-option" data-lang="ru">
+                        <img src="img/ru.png" alt="Русский">
+                        <span>Русский</span>
+                    </a>
+                    <a href="#" class="language-option" data-lang="en">
+                        <img src="img/en.png" alt="English">
+                        <span>English</span>
+                    </a>
+                    <a href="#" class="language-option" data-lang="de">
+                        <img src="img/de.png" alt="Deutsch">
+                        <span>Deutsch</span>
+                    </a>
+                    <a href="#" class="language-option" data-lang="fr">
+                        <img src="img/fr.png" alt="Français">
+                        <span>Français</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Профиль пользователя -->
+        <div class="profile-box">
+            <!-- Аватар -->
+            <div class="profile-avatar">
+                <div class="avatar-wrapper">
+                    <div class="avatar-circle">
+                        <span class="initials">ИФ</span>
+                        <img src="" alt="Аватар" id="avatar" style="display: none;">
+                    </div>
+                    <label class="avatar-upload">
+                        <input type="file" accept="image/*" id="avatar-input">
+                        <i class="fas fa-camera"></i>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Имя пользователя -->
+            <div class="profile-name">
+                <input type="text" id="nameInput" class="name-input" placeholder="Имя Фамилия">
+            </div>
+
+            <!-- Кнопки управления -->
+            <div class="control-panel">
+                <button class="control-btn audio-btn" id="audioBtn" title="Включить/выключить звук">
+                    <i class="fas fa-microphone"></i>
+                    <span class="status-indicator"></span>
+                </button>
+                <button class="control-btn video-btn" id="videoBtn" title="Включить/выключить видео">
+                    <i class="fas fa-video"></i>
+                    <span class="status-indicator"></span>
+                </button>
+                <button class="connect-btn" id="connectBtn">
+                    Подключиться
+                </button>
+                <button class="control-btn settings-btn" title="Настройки">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Декоративные элементы -->
+        <div class="decoration-wave"></div>
+    </div>
+
+    <script src="translations.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Language selector functionality
+            const languageButton = document.querySelector('.language-button');
+            const languageDropdown = document.querySelector('.language-dropdown');
+            const languageOptions = document.querySelectorAll('.language-option');
+
+            // Function to update page content based on selected language
+            function updatePageContent(lang) {
+                // Update navigation links
+                document.querySelector('.nav-links').children[0].textContent = translations[lang].nav.home;
+                document.querySelector('.nav-links').children[1].textContent = translations[lang].nav.about;
+                document.querySelector('.nav-links').children[2].textContent = translations[lang].nav.support;
+                
+                // Update language button text
+                languageButton.querySelector('span').textContent = translations[lang].nav.language;
+                
+                // Update profile elements
+                document.querySelector('#nameInput').placeholder = translations[lang].profile.namePlaceholder;
+                document.querySelector('#connectBtn').textContent = translations[lang].profile.connect;
+                
+                // Store translations for dynamic content
+                window.translations = translations;
+                window.currentLang = lang;
+            }
+
+            // Load saved language
+            const savedLang = localStorage.getItem('selectedLanguage') || 'ru';
+            const savedLangText = localStorage.getItem('selectedLanguageText');
+            const savedLangImg = localStorage.getItem('selectedLanguageImg');
+            
+            // Update content with saved language
+            updatePageContent(savedLang);
+            
+            if (savedLang && savedLangText && savedLangImg) {
+                languageButton.querySelector('span').textContent = translations[savedLang].nav.language;
+                languageButton.querySelector('img').src = savedLangImg;
+            }
+
+            // Open/close dropdown on button click
+            languageButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                languageDropdown.classList.toggle('active');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!languageDropdown.contains(e.target) && !languageButton.contains(e.target)) {
+                    languageDropdown.classList.remove('active');
+                }
+            });
+
+            // Handle language selection
+            languageOptions.forEach(option => {
+                option.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const lang = this.getAttribute('data-lang');
+                    const langText = this.textContent.trim();
+                    const langImg = this.querySelector('img').src;
+                    
+                    // Save selected language
+                    localStorage.setItem('selectedLanguage', lang);
+                    localStorage.setItem('selectedLanguageText', langText);
+                    localStorage.setItem('selectedLanguageImg', langImg);
+                    
+                    // Update page content
+                    updatePageContent(lang);
+                    
+                    // Update button icon
+                    languageButton.querySelector('img').src = langImg;
+                    
+                    // Close dropdown
+                    languageDropdown.classList.remove('active');
+                });
+            });
+
+            // Profile functionality
+            const avatar = document.getElementById('avatar');
+            const avatarInput = document.getElementById('avatar-input');
+            const initialsSpan = document.querySelector('.initials');
+            const nameInput = document.getElementById('nameInput');
+            const connectBtn = document.getElementById('connectBtn');
+            const audioBtn = document.getElementById('audioBtn');
+            const videoBtn = document.getElementById('videoBtn');
+            
+            // Загрузка состояния аудио и видео
+            const isAudioMuted = localStorage.getItem('audioMuted') === 'true';
+            const isVideoMuted = localStorage.getItem('videoMuted') === 'true';
+            
+            // Установка начального состояния кнопок
+            if (isAudioMuted) {
+                audioBtn.classList.add('muted');
+                const icon = audioBtn.querySelector('i');
+                icon.classList.replace('fa-microphone', 'fa-microphone-slash');
+            }
+            
+            if (isVideoMuted) {
+                videoBtn.classList.add('muted');
+                const icon = videoBtn.querySelector('i');
+                icon.classList.replace('fa-video', 'fa-video-slash');
+            }
+            
+            // Функция обновления инициалов
+            function updateInitials(name) {
+                if (!name || name.trim() === '') {
+                    initialsSpan.textContent = 'ИФ';
+                    return;
+                }
+                
+                const parts = name.trim().split(' ');
+                if (parts.length >= 2) {
+                    initialsSpan.textContent = (parts[0][0] + parts[1][0]).toUpperCase();
+                } else if (parts.length === 1) {
+                    initialsSpan.textContent = parts[0][0].toUpperCase();
+                } else {
+                    initialsSpan.textContent = 'ИФ';
+                }
+            }
+            
+            // Загрузка имени
+            try {
+                const savedName = localStorage.getItem('userName');
+                console.log('Загружено имя:', savedName);
+                if (savedName && savedName.trim() !== '') {
+                    nameInput.value = savedName;
+                    updateInitials(savedName);
+                }
+            } catch (e) {
+                console.error('Ошибка при загрузке имени:', e);
+            }
+            
+            // Загрузка аватара
+            try {
+                const savedAvatar = localStorage.getItem('avatar');
+                if (savedAvatar) {
+                    avatar.src = savedAvatar;
+                    avatar.style.display = 'block';
+                    initialsSpan.style.display = 'none';
+                }
+            } catch (e) {
+                console.error('Ошибка при загрузке аватара:', e);
+            }
+            
+            // Обработчик для кнопки аудио
+            audioBtn.addEventListener('click', function() {
+                this.classList.toggle('muted');
+                const icon = this.querySelector('i');
+                const isMuted = this.classList.contains('muted');
+                
+                if (isMuted) {
+                    icon.classList.replace('fa-microphone', 'fa-microphone-slash');
+                } else {
+                    icon.classList.replace('fa-microphone-slash', 'fa-microphone');
+                }
+                
+                // Сохраняем состояние
+                localStorage.setItem('audioMuted', isMuted);
+                console.log('Звук ' + (isMuted ? 'выключен' : 'включен'));
+            });
+            
+            // Обработчик для кнопки видео
+            videoBtn.addEventListener('click', function() {
+                this.classList.toggle('muted');
+                const icon = this.querySelector('i');
+                const isMuted = this.classList.contains('muted');
+                
+                if (isMuted) {
+                    icon.classList.replace('fa-video', 'fa-video-slash');
+                } else {
+                    icon.classList.replace('fa-video-slash', 'fa-video');
+                }
+                
+                // Сохраняем состояние
+                localStorage.setItem('videoMuted', isMuted);
+                console.log('Видео ' + (isMuted ? 'выключено' : 'включено'));
+            });
+            
+            // Сохранение имени при вводе
+            nameInput.addEventListener('input', function() {
+                try {
+                    const newName = this.value.trim();
+                    console.log('Сохраняем имя:', newName);
+                    localStorage.setItem('userName', newName);
+                    updateInitials(newName);
+                } catch (e) {
+                    console.error('Ошибка при сохранении имени:', e);
+                }
+            });
+            
+            // Сохранение при потере фокуса для надежности
+            nameInput.addEventListener('blur', function() {
+                try {
+                    const newName = this.value.trim();
+                    console.log('Сохраняем имя (blur):', newName);
+                    localStorage.setItem('userName', newName);
+                    
+                    // При перезагрузке сначала проверяем sessionStorage
+                    sessionStorage.setItem('userName', newName);
+                } catch (e) {
+                    console.error('Ошибка при сохранении имени (blur):', e);
+                }
+            });
+            
+            // Обработка загрузки аватара
+            avatarInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            avatar.src = e.target.result;
+                            avatar.style.display = 'block';
+                            initialsSpan.style.display = 'none';
+                            localStorage.setItem('avatar', e.target.result);
+                        } catch (error) {
+                            console.error('Ошибка при сохранении аватара:', error);
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Удаление аватара
+            avatar.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                if (confirm(translations[window.currentLang].profile.deleteAvatar)) {
+                    avatar.style.display = 'none';
+                    avatar.src = '';
+                    initialsSpan.style.display = 'block';
+                    localStorage.removeItem('avatar');
+                }
+            });
+            
+            // Переход на страницу конференции
+            connectBtn.addEventListener('click', function() {
+                try {
+                    const name = nameInput.value.trim();
+                    if (name) {
+                        localStorage.setItem('userName', name);
+                        sessionStorage.setItem('userName', name);
+                    }
+                    
+                    this.textContent = translations[window.currentLang].profile.connecting;
+                    this.disabled = true;
+                    
+                    setTimeout(() => {
+                        window.location.href = 'conference.html';
+                    }, 800);
+                } catch (e) {
+                    console.error('Error during transition:', e);
+                    window.location.href = 'conference.html';
+                }
+            });
+            
+            // Проверка работоспособности localStorage
+            try {
+                const testKey = '_test_storage';
+                localStorage.setItem(testKey, 'test');
+                const test = localStorage.getItem(testKey);
+                console.log('Тест localStorage:', test === 'test' ? 'OK' : 'Ошибка');
+                localStorage.removeItem(testKey);
+            } catch (e) {
+                console.error('Ошибка тестирования localStorage:', e);
+            }
+        });
+    </script>
+</body>
+</html> 
